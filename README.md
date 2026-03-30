@@ -1,7 +1,8 @@
 # pdf-utilities
 
 Bash utilities for PDF manipulation on Fedora Linux:
-- **pdf-ocr-rotate.sh**: OCR and automatic page rotation (in-place)
+- **pdf-ocr.sh**: OCR only (in-place)
+- **pdf-ocr-rotate.sh**: OCR with automatic page rotation (in-place)
 - **pdf-compress.sh**: PDF compression to screen quality (in-place)
 
 ## Installation
@@ -17,6 +18,7 @@ This will:
 2. Install the scripts to `/usr/local/bin`
 
 After installation, the commands are available as:
+- `pdf-ocr` (instead of `./pdf-ocr.sh`)
 - `pdf-ocr-rotate` (instead of `./pdf-ocr-rotate.sh`)
 - `pdf-compress` (instead of `./pdf-compress.sh`)
 
@@ -25,9 +27,24 @@ To uninstall:
 sudo ./uninstall.sh
 ```
 
+## pdf-ocr.sh
+
+Performs OCR (Optical Character Recognition) on PDF files using ocrmypdf, without rotation.
+
+### Usage
+```bash
+# Process in-place (overwrites input file)
+./pdf-ocr.sh <input.pdf>
+
+# Create new output file
+./pdf-ocr.sh <input.pdf> <output.pdf>
+```
+
+⚠️ In-place mode overwrites the original file after confirmation. Output file mode only warns if the output file already exists.
+
 ## pdf-ocr-rotate.sh
 
-Performs OCR (Optical Character Recognition) and automatic page rotation on PDF files using ocrmypdf.
+Performs OCR (Optical Character Recognition) with automatic page rotation on PDF files using ocrmypdf.
 
 ### Usage
 ```bash

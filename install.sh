@@ -7,16 +7,17 @@ YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
 INSTALL_DIR="/usr/local/bin"
-SCRIPTS=("pdf-ocr-rotate.sh" "pdf-compress.sh")
+SCRIPTS=("pdf-ocr.sh" "pdf-ocr-rotate.sh" "pdf-compress.sh")
+LIBS=("pdf-lib.sh")
 DEPENDENCIES=("ocrmypdf" "tesseract-langpack-fra" "tesseract-osd" "ghostscript")
 
 echo -e "${GREEN}=== PDF Tools Installation ===${NC}"
 echo ""
 
 # Check that we are in the correct directory
-for script in "${SCRIPTS[@]}"; do
+for script in "${SCRIPTS[@]}" "${LIBS[@]}"; do
     if [ ! -f "$script" ]; then
-        echo -e "${RED}Error: Script '$script' not found in current directory.${NC}"
+        echo -e "${RED}Error: File '$script' not found in current directory.${NC}"
         echo "Please run this script from the directory containing the files to install."
         exit 1
     fi
@@ -68,8 +69,23 @@ fi
 
 echo ""
 
-# --- 2. Install scripts ---
-echo -e "${GREEN}[*] Installing to $INSTALL_DIR...${NC}"
+# --- 2. Install libraries ---
+echo -e "${GREEN}[*] Installing libraries to $INSTALL_DIR...${NC}"
+for lib in "${LIBS[@]}"; do
+    echo "  - Installing $lib → $INSTALL_DIR/$lib"
+    install -m 644 "$lib" "$INSTALL_DIR/$lib"
+    if [ $? -eq 0 ]; then
+        echo -e "    ${GREEN}[V] Successfully installed${NC}"
+    else
+        echo -e "    ${RED}[X] Installation failed${NC}"
+        exit 1
+    fi
+done
+
+echo ""
+
+# --- 3. Install scripts ---
+echo -e "${GREEN}[*] Installing scripts to $INSTALL_DIR...${NC}"
 for script in "${SCRIPTS[@]}"; do
     # Name without extension for installation
     NAME="${script%.sh}"
@@ -97,10 +113,12 @@ for script in "${SCRIPTS[@]}"; do
 done
 echo ""
 echo "Usage examples:"
-echo "  pdf-ocr-rotate <input.pdf>                    # Process in-place"
-echo "  pdf-ocr-rotate <input.pdf> <output.pdf>       # Create new file"
+echo "  pdf-ocr <input.pdf>                           # OCR in-place"
+echo "  pdf-ocr <input.pdf> <output.pdf>              # OCR to new file"
+echo "  pdf-ocr-rotate <input.pdf>                    # OCR + rotation in-place"
+echo "  pdf-ocr-rotate <input.pdf> <output.pdf>       # OCR + rotation to new file"
 echo "  pdf-compress <input.pdf>                      # Compress in-place"
-echo "  pdf-compress <input.pdf> <output.pdf>         # Create new file"
+echo "  pdf-compress <input.pdf> <output.pdf>         # Compress to new file"
 echo "  pdf-compress <folder>                         # Compress all PDFs in folder"
 echo ""
 echo -e "${YELLOW}To uninstall, run: sudo ./uninstall.sh${NC}"

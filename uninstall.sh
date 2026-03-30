@@ -7,7 +7,8 @@ YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
 INSTALL_DIR="/usr/local/bin"
-SCRIPTS=("pdf-ocr-rotate" "pdf-compress")
+SCRIPTS=("pdf-ocr" "pdf-ocr-rotate" "pdf-compress")
+LIBS=("pdf-lib.sh")
 
 echo -e "${YELLOW}=== PDF Tools Uninstallation ===${NC}"
 echo ""
@@ -25,6 +26,11 @@ echo "The following files will be removed:"
 for script in "${SCRIPTS[@]}"; do
     if [ -f "$INSTALL_DIR/$script" ]; then
         echo "  - $INSTALL_DIR/$script"
+    fi
+done
+for lib in "${LIBS[@]}"; do
+    if [ -f "$INSTALL_DIR/$lib" ]; then
+        echo "  - $INSTALL_DIR/$lib"
     fi
 done
 echo ""
@@ -50,6 +56,20 @@ for script in "${SCRIPTS[@]}"; do
         fi
     else
         echo "  - $INSTALL_DIR/$script does not exist (skipped)"
+    fi
+done
+for lib in "${LIBS[@]}"; do
+    if [ -f "$INSTALL_DIR/$lib" ]; then
+        echo "  - Removing $INSTALL_DIR/$lib"
+        rm -f "$INSTALL_DIR/$lib"
+        if [ $? -eq 0 ]; then
+            echo -e "    ${GREEN}[V] Successfully removed${NC}"
+            ((REMOVED++))
+        else
+            echo -e "    ${RED}[X] Removal failed${NC}"
+        fi
+    else
+        echo "  - $INSTALL_DIR/$lib does not exist (skipped)"
     fi
 done
 

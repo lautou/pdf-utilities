@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Tool name
-NAME="pdf-ocr-rotate"
+NAME="pdf-ocr"
 
 # Get the directory where this script is located
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -17,7 +17,7 @@ else
 fi
 
 # Check dependencies
-check_dependencies "ocrmypdf" "tesseract-langpack-fra" "tesseract-osd"
+check_dependencies "ocrmypdf" "tesseract-langpack-fra"
 
 # Validate arguments
 validate_arguments "$#" "$NAME"
@@ -28,6 +28,5 @@ validate_files "$1" "$2"
 # Prompt for confirmation if needed
 prompt_overwrite_warning
 
-# Execute OCR + rotation command
-# Use threshold 0 to force rotation when misoriented text is detected
-execute_pdf_command "Processing OCR and automatic rotation..." "ocrmypdf --rotate-pages --rotate-pages-threshold 0 -l fra {input} {output}"
+# Execute OCR command
+execute_pdf_command "Processing OCR..." "ocrmypdf -l fra {input} {output}"

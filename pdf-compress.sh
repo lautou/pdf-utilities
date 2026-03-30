@@ -3,19 +3,21 @@
 # Tool name
 NAME="pdf-compress"
 
-# Terminal colors
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-NC='\033[0m' # No Color
+# Get the directory where this script is located
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# --- 1. Dependency check ---
-if ! rpm -q ghostscript &> /dev/null; then
-    echo -e "${RED}[X] Missing dependency: ghostscript${NC}"
-    echo ""
-    echo -e "${YELLOW}Please run './install.sh' to install dependencies.${NC}"
+# Source shared library
+if [ -f "$SCRIPT_DIR/pdf-lib.sh" ]; then
+    source "$SCRIPT_DIR/pdf-lib.sh"
+elif [ -f "/usr/local/bin/pdf-lib.sh" ]; then
+    source "/usr/local/bin/pdf-lib.sh"
+else
+    echo "Error: pdf-lib.sh not found"
     exit 1
 fi
+
+# --- 1. Dependency check ---
+check_dependencies "ghostscript"
 
 # --- 2. Argument validation ---
 if [ "$#" -lt 1 ] || [ "$#" -gt 2 ]; then
