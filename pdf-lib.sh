@@ -117,9 +117,9 @@ execute_pdf_command() {
         # In-place: use temporary file
         local temp_file=$(mktemp --suffix=.pdf)
 
-        # Replace placeholders in command
-        local command="${command_template//\{input\}/$INPUT_FILE}"
-        command="${command//\{output\}/$temp_file}"
+        # Replace placeholders in command with properly quoted filenames
+        local command="${command_template//\{input\}/\"$INPUT_FILE\"}"
+        command="${command//\{output\}/\"$temp_file\"}"
 
         # Execute command
         eval "$command" 2>/dev/null
@@ -134,9 +134,9 @@ execute_pdf_command() {
             exit 1
         fi
     else
-        # Output to different file
-        local command="${command_template//\{input\}/$INPUT_FILE}"
-        command="${command//\{output\}/$OUTPUT_FILE}"
+        # Output to different file with properly quoted filenames
+        local command="${command_template//\{input\}/\"$INPUT_FILE\"}"
+        command="${command//\{output\}/\"$OUTPUT_FILE\"}"
 
         # Execute command
         eval "$command" 2>/dev/null
